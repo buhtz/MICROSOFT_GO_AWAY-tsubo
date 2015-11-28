@@ -10,7 +10,7 @@ __date__ = 'November 2015'
 __maintainer__ = __author__
 __email__ = 'c.buhtz@posteo.jp'
 __license__ = 'GPLv3'
-__version__ = '0.0.1a'
+__version__ = '0.0.1'
 __app_name__ = 'Tsubo'
 
 #   This program is free software: you can redistribute it and/or modify
