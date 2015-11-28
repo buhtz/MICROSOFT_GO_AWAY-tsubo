@@ -30,6 +30,7 @@ import os
 import glob
 import argparse
 import random
+import subprocess
 
 
 def _GetFiles(dirs, include):
@@ -67,6 +68,8 @@ def _CreateArgParser():
     # outfile
     # TODO
 
+    # --sperator (default ;)
+
     # --action
     parser.add_argument('--action', metavar='CMD', dest='action', type=str,
                         help='Use this with care! Will execute CMD given the original filename as '\
@@ -77,8 +80,33 @@ def _CreateArgParser():
     # --no-mv-security-question
     parser.add_argument('--no-mv-security-question', action='store_true', dest='noaskMV',
                         help='')
+
+    # --progress, -p
     #
     return parser
+
+
+def _askForAction(a):
+    q = 'ATTENTION: Your action include "{}". You should use that with care.\n'\
+        'Are you really sure that you want to execute this action on each file?\n'\
+        'The actions is: "{}"\n'\
+        'Type "yes" if it is so: '.format(a, action)
+
+    if input(q).lower() == 'yes':
+        return True
+    else:
+        return False
+
+
+def _actionSTDOUT(org, new):
+    print('{};{}'.format(org, new))
+
+
+def _actionUser(org, new):
+    cmd = action.split()
+    cmd += [org]
+    cmd += [new]
+    subprocess.check_call(cmd)
 
 
 if __name__ == '__main__':
@@ -126,17 +154,33 @@ if __name__ == '__main__':
         else:
             newFiles += [ org_name + os.sep + formatStr.format(rnd) + org_ext ]
 
+    # are their files
+    if len(orgFiles) == 0:
+        print('No files found.')
+        sys.exit()
+
     # TODO to outfile
+
+    actionDo = None
 
     # do an action?
     if action:
-        if 'rm' in action and not noaskRM:
-
+        action = action.replace("'", "")
+        action = action.replace('"', '')
         print(action)
+        if 'rm' in action and not noaskRM:
+            if _askForAction('rm') != True: sys.exit()
+        if 'mv' in action and not noaskMV:
+            if _askForAction('mv') != True: sys.exit()
+
+        actionDo = _actionUser
+
     else:
         # to STDOUT
-        for org, new in zip(orgFiles, newFiles):
-            print('{};{}'.format(org, new))
+        actionDo = _actionSTDOUT
+
+    for org, new in zip(orgFiles, newFiles):
+        actionDo(org, new)
 
     sys.exit()
 
