@@ -1,5 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+# This repository is out-dated. Please use the [repository on GitLab](https://gitlab.com/buhtz/tsubo).
+
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Tsubo](#tsubo)
